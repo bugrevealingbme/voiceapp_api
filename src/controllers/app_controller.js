@@ -95,12 +95,12 @@ const postTTS = controllerErrorHOF(async (req, res) => {
     log(`Error: ${response.data}`);
 
     return res.status(401).send({
-      message: 'error',
+      message: 'error from api',
     });
   }
 
   return res.status(401).send({
-    message: 'error',
+    message: 'error from my code',
   });
 });
 
