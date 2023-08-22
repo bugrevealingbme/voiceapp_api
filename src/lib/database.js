@@ -14,8 +14,10 @@ const sequelize = new Sequelize(DATABASE_URL, {
   //   },
   // },
   pool: {
-    max: 5,
+    max: 10,
+    min: 0,
     idle: 10000,
+    acquire: 30000
   },
 });
 
