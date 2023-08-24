@@ -73,14 +73,19 @@ const postTTS = controllerErrorHOF(async (req, res) => {
         try {
           const result = JSON.parse(newline);
 
-          if (result.progress === 1) {
-            const filePath = await downloadAndCompressMp3(result.url, 'downloaded');
 
-            await Generated.create({
-              voice_id: selectedId,
-              text: text.trim(),
-              url: filePath,
-            });
+          if (result.progress === 1) {
+            if (process.env.NODE_ENV === 'development') {
+              //
+            } else {
+              const filePath = await downloadAndCompressMp3(result.url, 'downloaded');
+
+              await Generated.create({
+                voice_id: selectedId,
+                text: text.trim(),
+                url: filePath,
+              });
+            }
 
             return res.status(200).send(result);
           }
