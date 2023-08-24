@@ -137,7 +137,7 @@ const listVoices = controllerErrorHOF(async (req, res) => {
 });
 
 const listGenerated = controllerErrorHOF(async (req, res) => {
-  const result = await Generated.findAll({
+  const updatedResult = await Generated.findAll({
     include: [
       {
         model: Voice,
@@ -148,7 +148,7 @@ const listGenerated = controllerErrorHOF(async (req, res) => {
     raw: true,
   });
 
-  const updatedResult = result.map(c => {
+  const result = updatedResult.map(c => {
     return {
       ...c,
       url: `https://apiva.metareverse.net/${c.url}`,
@@ -162,7 +162,7 @@ const listGenerated = controllerErrorHOF(async (req, res) => {
     };
   });
 
-  return res.status(200).send({ updatedResult });
+  return res.status(200).send({ result });
 });
 
 function generateRandomFileName(length) {
