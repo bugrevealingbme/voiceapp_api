@@ -7,6 +7,7 @@ const fs = require('fs');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const crypto = require('crypto');
+const Filter = require('bad-words');
 
 const postTTS = controllerErrorHOF(async (req, res) => {
   const { text, selectedId } = req.body;
@@ -137,6 +138,13 @@ const listVoices = controllerErrorHOF(async (req, res) => {
 });
 
 const listGenerated = controllerErrorHOF(async (req, res) => {
+  const filter = new Filter();
+
+  const hasProfanity = (text) => {
+    return filter.isProfane(text);
+  };
+
+
   const updatedResult = await Generated.findAll({
     include: [
       {
@@ -144,23 +152,35 @@ const listGenerated = controllerErrorHOF(async (req, res) => {
       },
     ],
     order: [['id', 'DESC']],
-    limit: 30,
+    limit: 50,
     raw: true,
   });
 
-  const result = updatedResult.map(c => {
-    return {
-      ...c,
-      url: `https://apiva.metareverse.net/${c.url}`,
-      voice: {
-        "id": c['voice.id'],
-        "name": c['voice.name'],
-        "img": c['voice.img'],
-        "category": c['voice.category'],
-        "gender": c['voice.gender'],
-      }
-    };
-  });
+  const result = updatedResult.filter(c => {
+    const words = c.text.split(' ');
+    return words.length > 7;
+  }).map(c => {
+    const isOffensive = hasProfanity(c.text);
+
+    // If the text is not offensive, proceed to add it to the result
+    if (!isOffensive) {
+      return {
+        ...c,
+        url: `https://apiva.metareverse.net/${c.url}`,
+        voice: {
+          "id": c['voice.id'],
+          "name": c['voice.name'],
+          "img": c['voice.img'],
+          "category": c['voice.category'],
+          "gender": c['voice.gender'],
+        }
+      };
+    }
+
+    // If the text is offensive, skip it
+    return null;
+  }).filter(Boolean); // Filter out null values
+
 
   return res.status(200).send({ result });
 });
