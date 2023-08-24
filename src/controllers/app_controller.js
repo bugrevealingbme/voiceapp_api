@@ -23,7 +23,7 @@ const postTTS = controllerErrorHOF(async (req, res) => {
     });
   }
 
-  const checkBefore = await Generated.findOne({ attributes: ['url'], where: { text: text.trim() }, raw: true });
+  const checkBefore = await Generated.findOne({ attributes: ['url'], where: { text: text.trim(), voice_id: selectedId }, raw: true });
 
   if (checkBefore) {
 
@@ -131,6 +131,35 @@ const listVoices = controllerErrorHOF(async (req, res) => {
   return res.status(200).send({ result });
 });
 
+const listGenerated = controllerErrorHOF(async (req, res) => {
+  const result = await Generated.findAll({
+    include: [
+      {
+        model: Voice,
+      },
+    ],
+    order: [['id', 'DESC']],
+    limit: 30,
+    raw: true,
+  });
+
+  const updatedResult = result.map(c => {
+    return {
+      ...c,
+      url: `https://apiva.metareverse.net/${c.url}`,
+      voice: {
+        "id": c['voice.id'],
+        "name": c['voice.name'],
+        "img": c['voice.img'],
+        "category": c['voice.category'],
+        "gender": c['voice.gender'],
+      }
+    };
+  });
+
+  return res.status(200).send({ updatedResult });
+});
+
 function generateRandomFileName(length) {
   return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
 }
@@ -162,4 +191,4 @@ async function downloadAndCompressMp3(url, outputPath) {
   }
 }
 
-module.exports = { postTTS, listVoices };
+module.exports = { postTTS, listVoices, listGenerated };
