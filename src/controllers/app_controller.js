@@ -110,6 +110,7 @@ const listVoices = controllerErrorHOF(async (req, res) => {
         attributes: ['manifest'],
       },
     ],
+    order: [['name', 'ASC']]
   });
 
   const result = getresult.map(item => {
