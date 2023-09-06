@@ -1,3 +1,6 @@
+const crypto = require('crypto');
+
+
 /* eslint-disable no-bitwise */
 const controllerErrorHOF = (f) => async (req, res) => {
     try {
@@ -14,6 +17,11 @@ const controllerErrorHOF = (f) => async (req, res) => {
     }
 };
 
+function generateRandomFileName(length) {
+    return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
+}
+
 module.exports = {
     controllerErrorHOF,
+    generateRandomFileName,
 }
