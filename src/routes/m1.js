@@ -14,6 +14,7 @@ router.get('/', (req, res) => res.status(200).send('OK'));
 router.post('/post-tts', validateAll, getBody, appController.postTTS);
 router.post('/list-voices', validateAll, getBody, appController.listVoices);
 router.post('/list-generated', validateAll, getBody, appController.listGenerated);
+router.post('/list-langs', validateAll, getBody, appController.listLangs);
 
 
 router.post('/even-get-voices', validateAll, getBody, evenController.getVoices);

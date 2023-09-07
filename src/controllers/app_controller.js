@@ -1,7 +1,7 @@
 
 const { controllerErrorHOF, generateRandomFileName } = require('../helpers/utils');
 const axios = require('axios');
-const { Voice, VoiceIds, Generated } = require('../lib/database');
+const { Voice, VoiceIds, Generated, Languages } = require('../lib/database');
 
 const fs = require('fs');
 const util = require('util');
@@ -178,5 +178,12 @@ const listGenerated = controllerErrorHOF(async (req, res) => {
   return res.status(200).send({ result });
 });
 
+const listLangs = controllerErrorHOF(async (req, res) => {
+  const result = await Languages.findAll({
+    order: [['name', 'ASC']]
+  });
 
-module.exports = { postTTS, listVoices, listGenerated };
+  return res.status(200).send({ result });
+});
+
+module.exports = { postTTS, listVoices, listGenerated, listLangs };

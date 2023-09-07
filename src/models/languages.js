@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Voice = sequelize.define(
-    'voice',
+  const Languages = sequelize.define(
+    'languages',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,33 +11,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      img: {
+      code: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      category: {
+      flag: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      gender: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lang_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'languages',
-          key: 'id',
-        },
       },
     },
     {
-      tableName: 'voice',
+      tableName: 'languages',
       timestamps: false,
       freezeTableName: true,
     }
   );
 
-  return Voice;
+  return Languages;
 };
