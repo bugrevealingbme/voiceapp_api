@@ -109,12 +109,16 @@ const listVoices = controllerErrorHOF(async (req, res) => {
         model: VoiceIds,
         attributes: ['manifest'],
       },
+      {
+        model: Languages,
+        attributes: ['code'],
+      },
     ],
     order: [['name', 'ASC']]
   });
 
   const result = getresult.map(item => {
-    const { id, name, img, category, gender } = item;
+    const { id, name, img, category, gender, language } = item;
     const manifest = item.voice_ids ? item.voice_ids.map(v => v.manifest)[0] : '';
 
     return {
@@ -124,6 +128,7 @@ const listVoices = controllerErrorHOF(async (req, res) => {
       category,
       gender,
       manifest,
+      lang_code: language.code,
     };
   });
 
