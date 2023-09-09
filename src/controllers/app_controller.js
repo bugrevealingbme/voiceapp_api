@@ -89,7 +89,6 @@ const postTTS = controllerErrorHOF(async (req, res) => {
       'url': resUrl,
     }
 
-    return;
     await Generated.create({
       voice_id: selectedId,
       text: text.trim(),
