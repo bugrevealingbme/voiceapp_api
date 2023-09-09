@@ -71,6 +71,7 @@ const postTTS = controllerErrorHOF(async (req, res) => {
     const writer = fs.createWriteStream(downloadedFilePath);
     response.data.pipe(writer);
 
+    const compressedFilePath = downloadedFilePath;
     /* // Compress the MP3 file using ffmpeg
     const compressedFilePath = `${outputPath}/${randomFileName}ccc.mp3`;
     const ffmpegCommand = `ffmpeg -i ${downloadedFilePath} -b:a 256k ${compressedFilePath}`;
@@ -81,7 +82,7 @@ const postTTS = controllerErrorHOF(async (req, res) => {
       fs.renameSync(compressedFilePath, downloadedFilePath);
     } */
 
-    const resUrl = `https://apiva.metareverse.net/${downloadedFilePath}`;
+    const resUrl = `https://apiva.metareverse.net/${compressedFilePath}`;
 
     const result = {
       'progress': 1,
