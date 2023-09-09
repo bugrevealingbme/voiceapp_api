@@ -71,17 +71,17 @@ const postTTS = controllerErrorHOF(async (req, res) => {
     const writer = fs.createWriteStream(downloadedFilePath);
     response.data.pipe(writer);
 
-    // Compress the MP3 file using ffmpeg
+    /* // Compress the MP3 file using ffmpeg
     const compressedFilePath = `${outputPath}/${randomFileName}ccc.mp3`;
-    const ffmpegCommand = `ffmpeg -i ${downloadedFilePath} -ab 256k ${compressedFilePath}`;
+    const ffmpegCommand = `ffmpeg -i ${downloadedFilePath} -b:a 256k ${compressedFilePath}`;
     await exec(ffmpegCommand);
     if (fs.existsSync(compressedFilePath)) {
       fs.unlinkSync(downloadedFilePath);
     } else {
       fs.renameSync(compressedFilePath, downloadedFilePath);
-    }
+    } */
 
-    const resUrl = `https://apiva.metareverse.net/${compressedFilePath}`;
+    const resUrl = `https://apiva.metareverse.net/${downloadedFilePath}`;
 
     const result = {
       'progress': 1,
@@ -89,6 +89,7 @@ const postTTS = controllerErrorHOF(async (req, res) => {
       'url': resUrl,
     }
 
+    return;
     await Generated.create({
       voice_id: selectedId,
       text: text.trim(),
