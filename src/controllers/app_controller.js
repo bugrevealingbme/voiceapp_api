@@ -18,7 +18,7 @@ const postTTS = controllerErrorHOF(async (req, res) => {
     });
   }
 
-  if (text && text.length > 300) {
+  if (text && text.length > 350) {
     return res.status(400).send({
       message: 'max_character',
     });
@@ -73,7 +73,7 @@ const postTTS = controllerErrorHOF(async (req, res) => {
 
     // Compress the MP3 file using ffmpeg
     const compressedFilePath = `${outputPath}/${randomFileName}ccc.mp3`;
-    const ffmpegCommand = `ffmpeg -i ${downloadedFilePath} -ab 128k ${compressedFilePath}`;
+    const ffmpegCommand = `ffmpeg -i ${downloadedFilePath} -ab 256k ${compressedFilePath}`;
     await exec(ffmpegCommand);
     if (fs.existsSync(compressedFilePath)) {
       fs.unlinkSync(downloadedFilePath);
@@ -150,7 +150,7 @@ const listGenerated = controllerErrorHOF(async (req, res) => {
       },
     ],
     order: [['id', 'DESC']],
-    limit: 50,
+    limit: 30,
     raw: true,
   });
 
