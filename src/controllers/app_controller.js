@@ -120,12 +120,13 @@ const listVoices = controllerErrorHOF(async (req, res) => {
   });
 
   const result = getresult.map(item => {
-    const { id, fake_name, img, category, gender, language } = item;
+    const { id, name, fake_name, img, category, gender, language } = item;
     const manifest = item.voice_ids ? item.voice_ids.map(v => v.manifest)[0] : '';
 
     return {
       id,
-      name: fake_name,
+      name,
+      fake_name,
       img,
       category,
       gender,
