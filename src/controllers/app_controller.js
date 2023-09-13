@@ -7,6 +7,7 @@ const fs = require('fs');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const Filter = require('bad-words');
+const Sequelize = require('sequelize');
 
 const postTTS = controllerErrorHOF(async (req, res) => {
   const { text, selectedId } = req.body;
@@ -119,12 +120,12 @@ const listVoices = controllerErrorHOF(async (req, res) => {
   });
 
   const result = getresult.map(item => {
-    const { id, name, img, category, gender, language } = item;
+    const { id, fake_name, img, category, gender, language } = item;
     const manifest = item.voice_ids ? item.voice_ids.map(v => v.manifest)[0] : '';
 
     return {
       id,
-      name,
+      name: fake_name,
       img,
       category,
       gender,
@@ -186,7 +187,10 @@ const listGenerated = controllerErrorHOF(async (req, res) => {
 
 const listLangs = controllerErrorHOF(async (req, res) => {
   const result = await Languages.findAll({
-    order: [['name', 'ASC']]
+    order: [
+      [Sequelize.literal(`CASE WHEN code = 'en' THEN 0 ELSE 1 END`), 'ASC'],
+      ['name', 'ASC']
+    ]
   });
 
   return res.status(200).send({ result });
